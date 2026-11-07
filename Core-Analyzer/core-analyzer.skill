@@ -1,0 +1,28 @@
+โปรเจกต์: Eyes of Cross Domain (Core-Analyzer) 
+วัตถุประสงค์: วิเคราะห์ Signature ของภัยพิบัติ (พายุ, ฝนแช่, PM2.5) 
+จากการซ้อนทับของลม 4 ชั้นบรรยากาศ ประวัติการพัฒนา:
+
+ย้ายจาก LINE API (Paid) มายัง Telegram API (Free)
+เปลี่ยนความถี่การรายงานเป็นทุก 24 ชม. (10:00 น.) เพื่อลด Noise ของข้อมูล
+ตั้งค่า Opacity เริ่มต้น 20% เพื่อให้มองเห็นความสัมพันธ์ข้ามโดเมนได้ทันที 
+ความปลอดภัย: รหัส ID และ Token ถูกเก็บไว้ใน Environment Variables 
+ของ Cloudflare Workers (TG_TOKEN, TG_CHAT_ID) 
+เพื่อป้องกันความลับรั่วไหลจากฝั่ง Client
+Root Cause: ปัญหาเดิมคือภาพแยกส่วนทำให้ AI ตรวจจับรูปแบบพายุได้ยาก 
+การซ้อนทับ (Overlay) คือทางแก้ Suggestions:
+
+Redeploy: อัปเดต worker.js ให้รองรับฟังก์ชัน capture ที่รับ FormData
+Cron Check: ตรวจสอบใน wrangler.toml ว่าตั้งเวลาเป็น 0 3 * * * (10:00 น. ไทย) แล้วหรือยัง
+D1 Sync: ตรวจสอบว่าตารางในฐานข้อมูลรองรับการเก็บค่า Intensity จากทั้ง 4 เลเยอร์แล้ว
+
+เพิ่มข้อมูลในแฟ้ม core-analyzer.skill:
+
+Logic การ Sync: ใช้ Event-driven Communication (postMessage) ระหว่าง Parent (Dashboard) และ Children (4 Layers) แทนการให้แต่ละตัวทำงานแยกกัน
+Basemap Control: แผนที่ฐานทำหน้าที่เป็น "Master" ส่วนเลเยอร์บรรยากาศเป็น "Slave" ที่ต้องขยับตามพิกัดของ Master เสมอ
+Remote Inject: เว็บเลเยอร์ทั้ง 4 ต้องมี Listener สำหรับรับพิกัดเพื่อทำ map.setView() ให้ตรงกัน
+Suggestions:
+
+Check Leaflet Variable: ในหน้าเว็บทั้ง 4 ตรวจสอบว่าตัวแปรที่ใช้สร้างแผนที่ชื่อ map หรือไม่ ถ้าไม่ใช่ให้เปลี่ยนใน Remote Code ให้ตรงกัน
+CORS Policy: ตรวจสอบว่า Cloudflare Workers ตั้งค่า Access-Control-Allow-Origin เป็น * หรือ URL ของแดชบอร์ด เพื่อให้การส่ง Message ไม่ถูกบล็อก
+Smoothness: หากต้องการให้การเคลื่อนที่ดูนุ่มนวล ให้ปรับ { animate: true } ใน Remote Code
+

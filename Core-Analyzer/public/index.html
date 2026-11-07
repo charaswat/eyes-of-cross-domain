@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Core-Analyzer | Eyes of Cross Domain</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+    <div id="map-container">
+        <!-- เลเยอร์ฐานจาก Windy -->
+        <iframe id="windy-frame" src="https://embed.windy.com/embed2.html?lat=13.7&lon=100.5&zoom=5&level=surface&overlay=wind" frameborder="0"></iframe>
+        
+        <!-- เลเยอร์อากาศ 4 ชั้นจาก Cloudflare Workers (ซ้อนทับกัน) -->
+        <div id="layer-overlays">
+            <iframe class="weather-layer" src="https://vertical-velocity-900hpa.charaswat.workers.dev/"></iframe>
+            <iframe class="weather-layer" src="https://vertical-velocity-850hpa.charaswat.workers.dev/"></iframe>
+            <iframe class="weather-layer" src="https://vertical-velocity-500hpa.charaswat.workers.dev/"></iframe>
+            <iframe class="weather-layer" src="https://vertical-velocity-200hpa.charaswat.workers.dev/"></iframe>
+        </div>
+    </div>
+
+    <!-- AI Analyzer Box -->
+    <div id="core-analyzer-box">
+        <div class="analyzer-status">📡 AI CORE: MONITORING (DAILY 10:00)</div>
+        <div class="analyzer-meta">EYES OF CROSS DOMAIN PROJECT</div>
+        <div id="scan-display">READY: SYNCED 4 LAYERS</div>
+        <div class="log-container" id="event-log">> System Online...</div>
+    </div>
+
+    <!-- Control Panel -->
+    <aside id="control-panel">
+		<h3>Command Center</h3>
+        <div class="control-item">
+			<label>Base Map Layer</label>
+			<select id="map-select" onchange="changeBaseMap(this.value)">
+				<option value="windy">Windy Default</option>
+				<option value="google-terrain">Google Terrain</option>
+				<option value="google-satellite">Google Satellite</option>
+				<option value="canvas-dark">Dark Canvas (Filter Mode)</option>
+				<option value="canvas-light">Light Canvas</option>
+			</select>
+            <label>Master Opacity</label>
+            <input type="range" id="opacity-ctrl" min="0" max="100" value="20">
+            <span id="opacity-val">20%</span>
+        </div>
+        <button class="btn-export" onclick="exportBrandedReport()">📊 Daily Telegram Export</button>
+        <button class="btn-scan" onclick="manualSync()">🔄 Manual Sync</button>
+    </aside>
+	<input type="range" id="opacity-ctrl" min="10" max="100" value="20">
+    <!-- Area สำหรับ Capture ภาพส่ง Telegram (ซ่อนไว้) -->
+    <div id="branding-capture">
+        <div class="report-header">
+            <h1>CORE-ANALYZER ANALYTICS</h1>
+            <p>Cross-Domain Disaster Signature Discovery</p>
+        </div>
+        <div id="snapshot-body"></div>
+        <div class="report-footer">
+            Analyst: Charaswat AI | Date: <span id="snapshot-date"></span>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

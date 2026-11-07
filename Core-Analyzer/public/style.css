@@ -1,0 +1,35 @@
+:root { --primary: #00d4ff; --bg: #0a0a0a; }
+body { margin: 0; background: var(--bg); color: #fff; font-family: sans-serif; overflow: hidden; }
+
+#map-container { position: relative; width: 100vw; height: 100vh; }
+iframe { width: 100%; height: 100%; border: none; }
+
+.leaflet-container {
+    background-color: rgba(155, 155, 155, 0.5); /* แก้ไขเครื่องหมาย } เป็น ; */
+}
+
+#layer-overlays {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; /* เพื่อให้เลื่อนแผนที่ Windy ด้านล่างได้ */
+}
+
+.weather-layer {
+    position: absolute; top: 0; left: 0;
+    opacity: 0.2; /* เริ่มต้นที่ 20% ตามสั่ง */
+    mix-blend-mode: screen; /* ช่วยให้จุดที่ข้อมูลซ้อนทับกันสว่างเด่นขึ้น */
+    transition: opacity 0.3s ease;
+}
+
+#core-analyzer-box {
+    position: absolute; top: 20px; left: 20px; width: 300px;
+    background: rgba(255, 255, 255, 0.2); /* เริ่มต้น 20% */
+    backdrop-filter: blur(10px);
+    padding: 15px; border-left: 4px solid var(--primary);
+}
+
+#control-panel {
+    position: absolute; bottom: 20px; right: 20px;
+    background: rgba(0,0,0,0.8); padding: 20px; border-radius: 8px;
+}
+
+#branding-capture { position: fixed; top: -5000px; background: white; color: black; padding: 40px; }

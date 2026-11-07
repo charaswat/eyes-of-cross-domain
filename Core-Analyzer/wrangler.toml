@@ -1,0 +1,30 @@
+name = "core-analyzer"
+main = "src/worker.js"
+compatibility_date = "2026-11-04"
+compatibility_flags = ["nodejs_compat"]
+
+# ── Browser Run (ถ่าย screenshot หน้า dashboard) ──
+[browser]
+binding = "BROWSER"
+
+# ── D1 Databases ──
+# DB = weather_db (เก็บ analysis_logs, settings, subscribers)
+[[d1_databases]]
+binding = "DB"
+database_name = "weather_db"
+database_id = "6ff5c0a1-3094-46c2-a78a-b3c2ce3af645"
+
+# IMAGE_DB = image_db (เก็บ screenshot เป็น base64 + metadata)
+[[d1_databases]]
+binding = "IMAGE_DB"
+database_name = "image_db"
+database_id = "c5417904-8d8b-402d-a862-d21b3c50b7e6"
+
+# ── Static Assets ──
+# public/dashboard/index.html → ถูกเสิร์ฟที่ /dashboard อัตโนมัติ
+[assets]
+directory = "./public"
+
+# ── Cron Trigger ──
+[triggers]
+crons = ["0 3 * * *"] # รันทุก 10.00 น. เวลาไทย
